@@ -6,84 +6,142 @@ import { Cart } from './Cart';
 import { BasketList } from './BasketList';
 import { Alert } from './Alert';
 
+
+// ПЕРЕКЛЮЧЕНИЕ НА КОНТЕКСТ И РЕДЮСЕР
+
+import { ShopContext } from '../context';
+
 function Shop() {
-    const [goods, setGoods] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    const [order, setOrder] = React.useState([]);
-    const [isBasketShow, setBasketShow] = React.useState(false);
-    const [alertName, setAlertName] = React.useState('');
+    // const [goods, setGoods] = React.useState([]);
+    // const [loading, setLoading] = React.useState(true);
+    // const [order, setOrder] = React.useState([]);
+    // const [isBasketShow, setBasketShow] = React.useState(false);
+    // const [alertName, setAlertName] = React.useState('');
 
-    const addToBasket = (item) => {
-        const itemIndex = order.findIndex(
-            (orderItem) => orderItem.id === item.id
-        );
+    // const addToBasket = (item) => {
+    //     const itemIndex = order.findIndex(
+    //         (orderItem) => orderItem.id === item.id
+    //     );
 
-        if (itemIndex < 0) {
-            const newItem = {
-                ...item,
-                quantity: 1,
-            };
-            setOrder([...order, newItem]);
-        } else {
-            const newOrder = order.map((orderItem, index) => {
-                if (index === itemIndex) {
-                    return {
-                        ...orderItem,
-                        quantity: orderItem.quantity + 1,
-                    };
-                } else {
-                    return orderItem;
-                }
-            });
+    //     if (itemIndex < 0) {
+    //         const newItem = {
+    //             ...item,
+    //             quantity: 1,
+    //         };
+    //         setOrder([...order, newItem]);
+    //     } else {
+    //         const newOrder = order.map((orderItem, index) => {
+    //             if (index === itemIndex) {
+    //                 return {
+    //                     ...orderItem,
+    //                     quantity: orderItem.quantity + 1,
+    //                 };
+    //             } else {
+    //                 return orderItem;
+    //             }
+    //         });
 
-            setOrder(newOrder);
-        }
-        setAlertName(item.name)
-    }
+    //         setOrder(newOrder);
+    //     }
+    //     setAlertName(item.name)
+    // }
 
-    const incQuantity = (itemId) => {
-        const newOrder = order.map((elem) => {
-            if (elem.id === itemId) {
-                const newQuantity = elem.quantity + 1;
-                return {
-                    ...elem,
-                    quantity: newQuantity,
-                };
-            } else {
-                return elem;
-            }
-        })
-        setOrder(newOrder)
-    };
+    // const incQuantity = (itemId) => {
+    //     const newOrder = order.map((elem) => {
+    //         if (elem.id === itemId) {
+    //             const newQuantity = elem.quantity + 1;
+    //             return {
+    //                 ...elem,
+    //                 quantity: newQuantity,
+    //             };
+    //         } else {
+    //             return elem;
+    //         }
+    //     })
+    //     setOrder(newOrder)
+    // };
 
-    const decQuantity = (itemId) => {
-        const newOrder = order.map((elem) => {
-            if (elem.id === itemId) {
-                const newQuantity = elem.quantity - 1;
-                return {
-                    ...elem,
-                    quantity: newQuantity >= 0 ? newQuantity : 0,
-                };
-            } else {
-                return elem;
-            }
-        })
-        setOrder(newOrder)
-    };
+    // const decQuantity = (itemId) => {
+    //     const newOrder = order.map((elem) => {
+    //         if (elem.id === itemId) {
+    //             const newQuantity = elem.quantity - 1;
+    //             return {
+    //                 ...elem,
+    //                 quantity: newQuantity >= 0 ? newQuantity : 0,
+    //             };
+    //         } else {
+    //             return elem;
+    //         }
+    //     })
+    //     setOrder(newOrder)
+    // };
 
 
-    const removeFromBasket = (itemId) => {
-        const newOrder = order.filter(elem => elem.id !== itemId)
-        setOrder(newOrder)
-    }
+    // const removeFromBasket = (itemId) => {
+    //     const newOrder = order.filter(elem => elem.id !== itemId)
+    //     setOrder(newOrder)
+    // }
 
-    const handleBasketShow = () => {
-        setBasketShow(!isBasketShow);
-    }
+    // const handleBasketShow = () => {
+    //     setBasketShow(!isBasketShow);
+    // }
 
-    const handleCloseAlert = () => {
-        setAlertName('');
-    }
+    // const handleCloseAlert = () => {
+    //     setAlertName('');
+    // }
+
+    // React.useEffect(() => {
+    //     fetch(API_URL, {
+    //         headers: {
+    //             'Authorization': API_KEY,
+    //         }
+    //     })
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             data.featured && setGoods(data.featured)
+    //             setLoading(false);
+    //             console.log(data)
+    //         });
+
+    // }, [])
+
+
+
+
+    // return (
+    //     <main className='container content'>
+    //         <Cart
+    //             quantity={order.length}
+    //             onBasketShow={handleBasketShow}
+    //         />
+    //         {
+    //             loading ?
+    //                 (<Preloader />
+    //                 ) : (
+    //                     <GoodsList
+    //                         goods={goods}
+    //                         onBuy={addToBasket}
+
+    //                     />
+    //                 )
+    //         }
+    //         {
+    //             isBasketShow && (
+    //                 <BasketList
+    //                     order={order}
+    //                     onBasketShow={handleBasketShow}
+    //                     onRemove={removeFromBasket}
+    //                     increment={incQuantity}
+    //                     decrement={decQuantity} />
+    //             )}
+    //         {alertName && <Alert name={alertName} onCloseAlert={handleCloseAlert} />}
+
+    //     </main>
+    // )
+
+    // ПЕРЕКЛЮЧЕНИЕ НА КОНТЕКСТ И РЕДЮСЕР
+
+    const { loading, setGoods, isBasketShow, alertName } = React.useContext(ShopContext);
 
     React.useEffect(() => {
         fetch(API_URL, {
@@ -93,43 +151,26 @@ function Shop() {
         })
             .then(res => res.json())
             .then(data => {
-                data.featured && setGoods(data.featured)
-                setLoading(false);
-                console.log(data)
+                setGoods(data.featured)
             });
 
     }, [])
 
-
-
-
     return (
         <main className='container content'>
-            <Cart
-                quantity={order.length}
-                onBasketShow={handleBasketShow}
-            />
+            <Cart />
             {
                 loading ?
                     (<Preloader />
                     ) : (
-                        <GoodsList
-                            goods={goods}
-                            onBuy={addToBasket}
-
-                        />
+                        <GoodsList />
                     )
             }
             {
                 isBasketShow && (
-                    <BasketList
-                        order={order}
-                        onBasketShow={handleBasketShow}
-                        onRemove={removeFromBasket}
-                        increment={incQuantity}
-                        decrement={decQuantity} />
+                    <BasketList />
                 )}
-            {alertName && <Alert name={alertName} onCloseAlert={handleCloseAlert} />}
+            {alertName && <Alert />}
 
         </main>
     )
